@@ -22,15 +22,23 @@ class MoviesController < ApplicationController
   end
 
   def create
-    movie = Movie.new(movie_params)
-    if movie.save
-      render json: movie.as_json(only: [:id]), status: :created
-      return
+    existing_movie = Movie.find_by(external_id: params[:external_id])
+    if !existing_movie
+      movie = Movie.new(movie_params)
+      if movie.save
+        render json: movie.as_json(only: [:id]), status: :created
+        return
+      else
+        render json: {
+            ok: false,
+            errors: movie.errors.messages
+          }, status: :bad_request
+        return
+      end
     else
-      render json: {
-          ok: false,
-          errors: movie.errors.messages
-        }, status: :bad_request
+      existing_movie.inventory += params[:inventory].to_i
+      existing_movie.save
+      render json: movie.as_json(only: [:id]), status: :created
       return
     end
   end
