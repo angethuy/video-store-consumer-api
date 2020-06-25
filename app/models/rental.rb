@@ -32,7 +32,6 @@ private
   def movie_inventory_available
     if movie.available_inventory <= 0 
       errors.add(:available_inventory, "No inventory available")
-      # self.errors[:message] << "no inventory available"
     end
   end
 

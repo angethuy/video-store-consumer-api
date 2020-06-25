@@ -4,17 +4,16 @@ class MoviesController < ApplicationController
   def index
     if params[:query]
       data = MovieWrapper.search(params[:query])
+      render status: :ok, json: data.as_json
     else
       data = Movie.all
-    end
-
-    render(
-      status: :ok, 
-      json: data.as_json(
-        methods: [:available_inventory]
+      render(
+        status: :ok, 
+        json: data.as_json(
+          methods: [:available_inventory]
+        )
       )
-    )
-    
+    end
   end
 
   def show
