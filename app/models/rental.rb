@@ -5,6 +5,8 @@ class Rental < ApplicationRecord
   # validates :movie, uniqueness: { scope: :customer }
   validates :due_date, presence: true
   validate :due_date_in_future, on: :create
+  # validates_associated :movie??????
+  validate :movie_inventory_available, on: :create
 
   after_initialize :set_checkout_date
   after_initialize :set_returned
@@ -18,11 +20,19 @@ class Rental < ApplicationRecord
     self.where(returned: false).where("due_date < ?", Date.today)
   end
 
+
 private
   def due_date_in_future
     return unless self.due_date
     unless due_date > Date.today
       errors.add(:due_date, "Must be in the future")
+    end
+  end
+
+  def movie_inventory_available
+    if movie.available_inventory <= 0 
+      errors.add(:available_inventory, "No inventory available")
+      # self.errors[:message] << "no inventory available"
     end
   end
 

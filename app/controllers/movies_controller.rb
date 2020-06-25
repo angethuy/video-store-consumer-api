@@ -8,7 +8,13 @@ class MoviesController < ApplicationController
       data = Movie.all
     end
 
-    render status: :ok, json: data.as_json
+    render(
+      status: :ok, 
+      json: data.as_json(
+        methods: [:available_inventory]
+      )
+    )
+    
   end
 
   def show
