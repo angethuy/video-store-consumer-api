@@ -7,12 +7,13 @@ class MoviesController < ApplicationController
       render status: :ok, json: data.as_json
     else
       data = Movie.all
-      render(
-        status: :ok, 
-        json: data.as_json(
-          methods: [:available_inventory]
-        )
-      )
+      render status: :ok, json: data, each_serializer: MovieSerializer
+      # render(
+      #   status: :ok, 
+      #   json: data.as_json(
+      #     methods: [:available_inventory]
+      #   )
+      # )
     end
   end
 
