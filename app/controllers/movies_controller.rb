@@ -6,7 +6,7 @@ class MoviesController < ApplicationController
       data = MovieWrapper.search(params[:query])
       render status: :ok, json: data.as_json
     else
-      data = Movie.all
+      data = Movie.all.order('created_at DESC')
       render status: :ok, json: data, each_serializer: MovieSerializer
       # render(
       #   status: :ok, 
